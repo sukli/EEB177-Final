@@ -47,4 +47,4 @@ def main():
     process_seq_files(seq_files)
 
 if __name__ == '__main__':
-  main()
+    main()
