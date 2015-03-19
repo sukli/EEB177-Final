@@ -15,10 +15,13 @@ def process_seq_file(filename):
     lines = f.read().splitlines()
     # name is first line, starting from after the first character '>'
     seq_name = lines[0][1:]
-    seq = concat_list_lines(lines[1:]).lower()
+    seq_lines = []
+    for line in lines[1:]:
+        seq_lines.append(line.lower())
+    seq = concat_list_lines(seq_lines)
     seq_len = len(seq)
     f.close()
-    return (seq_name, seq, seq_len)
+    return (seq_name, seq_lines, seq_len)
 
 # creates a log file with the appropriate header
 def create_log_file():
@@ -32,9 +35,10 @@ def process_seq_files(filenames):
     log_file = create_log_file()
     for filename in filenames:
         # process file and write to output
-        (seq_name, seq, seq_len) = process_seq_file(filename)
+        (seq_name, seq_lines, seq_len) = process_seq_file(filename)
         output_file.write(">%s\n" % seq_name)
-        output_file.write("%s\n" % seq)
+        for line in seq_lines:
+            output_file.write("%s\n" % line)
 
         # record in log
         log_file.write("%s,%d\n" % (seq_name, seq_len))
